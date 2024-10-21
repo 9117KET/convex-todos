@@ -3,18 +3,16 @@ import {useState } from "react";
 import { NewTodoForm } from "./_components/new-todo-form";
 
 // Define the structure of a single to-do item
-type ToDoItemProps = {
+type ToDoItemType = {
   title: string;
   description: string;
   completed: boolean;
-  onCompleteChanged: (newValue: boolean) => void;
-  onRemove: () => void;
 }
 
 // Main component for the Home page
 export default function Home() {
   // State to hold the list of to-do items
-  const [todos, setTodos] = useState<ToDoItem[]>([
+  const [todos, setTodos] = useState<ToDoItemType[]>([
     { title: "Example", description: "This is an example", completed: false }
   ]);
 
@@ -57,7 +55,7 @@ export default function Home() {
 }
 
 // Corrected ToDoItem component
-function ToDoItem({ title, description, completed, onCompleteChanged, onRemove }: ToDoItemProps) {
+function ToDoItem({ title, description, completed, onCompleteChanged, onRemove }: ToDoItemType) {
   return (
     <li className="w-full flex gap-2 items-center border rounded p-2">
       {/* Checkbox to toggle the completion status of a to-do */}
