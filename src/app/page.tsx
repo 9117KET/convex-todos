@@ -8,6 +8,7 @@ type ToDoItemProps = {
   description: string;
   completed: boolean;
   onCompleteChanged: (newValue: boolean) => void;
+  onRemove: () => void;
 }
 
 // Main component for the Home page
@@ -24,14 +25,17 @@ export default function Home() {
         {/* Map over the todos array to render each to-do item */}
         {todos.map((todo, index) => (
           <ToDoItem 
-            key={index} // Moved the key here
+            key={index}
             title={todo.title} 
             description={todo.description} 
             completed={todo.completed}
-            onCompleteChanged={(newValue: boolean) => { // Explicitly define the type for newValue
+            onCompleteChanged={(newValue: boolean) => {
               const newTodos = [...todos];
               newTodos[index].completed = newValue;
               setTodos(newTodos);
+            }}
+            onRemove={() => {
+              setTodos(todos.filter((_, i) => i !== index));
             }}
           />
         ))}
@@ -42,15 +46,20 @@ export default function Home() {
           newTodos.push({title, description, completed: false});
           return newTodos;
         });
-      }} />
+      }} 
+      onRemove={()=>{
+        const newTodos = [...prev].filter((_, i) => i !== index);
+        return newTodos;
+      }}
+      />
     </div>
   );
 }
 
 // Corrected ToDoItem component
-function ToDoItem({ title, description, completed, onCompleteChanged }: ToDoItemProps) {
+function ToDoItem({ title, description, completed, onCompleteChanged, onRemove }: ToDoItemProps) {
   return (
-    <li className="flex fap-2 border rounded p-2">
+    <li className="w-full flex gap-2 items-center border rounded p-2">
       {/* Checkbox to toggle the completion status of a to-do */}
       <input 
         type="checkbox" 
@@ -58,8 +67,13 @@ function ToDoItem({ title, description, completed, onCompleteChanged }: ToDoItem
         onChange={e => onCompleteChanged(e.target.checked)}
       />
       <div>
-      <p className="font-semibold">{title}</p>
-      <p className="text-sm text-gray-600">{description}</p>
+        <p className="font-semibold">{title}</p>
+        <p className="text-sm text-gray-600">{description}</p>
+      </div>
+      <div className="ml-auto">
+        <button type="button" className="text-red-500" onClick={onRemove}>
+          Remove
+        </button>
       </div>
     </li>
   );
